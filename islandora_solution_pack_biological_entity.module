@@ -13,7 +13,7 @@
  * of its power and flexibillty.
  * See https://api.drupal.org/api/drupal/modules!system!system.api.php/function/hook_menu/7
  */
-function solution_pack_biological_entity_menu() {
+function islandora_solution_pack_biological_entity_menu() {
   return array(
     'admin/islandora/biological_entity' => array(
       'title' => 'Biological Entity Module',
@@ -33,11 +33,13 @@ function solution_pack_biological_entity_menu() {
  * we can append a pid to a template and the new template file will be called
  * (the pids colon should be replaced with a dash)
  */
-function solution_pack_biological_entity_theme($existing, $type, $theme, $path) {
+
+function islandora_solution_pack_biological_entity_theme($existing, $type, $theme, $path) {
+
   return array(
-    'solution_pack_biological_entity' => array(
-      'template' => 'theme/islandora-solution_pack_biological_entity',
-      'pattern' => 'solution_pack_biological_entity__',
+    'be_rank' => array(
+      'template' => 'theme/islandora-rank',
+      'pattern' => 'be_rank__',
       'variables' => array('islandora_object' => NULL),
     ),
   );
@@ -54,8 +56,7 @@ function solution_pack_biological_entity_theme($existing, $type, $theme, $path) 
  * solution_pack_biological_entity_solution_pack_biological_entityCModel_islandora_view_object
  * 
  */
-function solution_pack_biological_entity_preprocess_solution_pack_biological_entity(array &$variables) {
-
+function islandora_solution_pack_biological_entity_preprocess_be_rank(array &$variables) {
   $islandora_object = $variables['islandora_object'];
   // Thumbnail.
   if (isset($islandora_object['TN'])) {
@@ -76,8 +77,9 @@ function solution_pack_biological_entity_preprocess_solution_pack_biological_ent
  * the array whihc makes the seond argument to the theme function.
  */
 function islandora_solution_pack_biological_entity_islandora_sp_biological_entity_rank_cmodel_islandora_view_object($object, $page_number, $page_size) {
-//  $output = theme('solution_pack_biological_entity', array('islandora_object' => $object));
-  $output='RANK object';
+
+  $output = theme('be_rank', array('islandora_object' => $object));
+//  $output='RANK object';
   return array('' => $output);
 }
 
