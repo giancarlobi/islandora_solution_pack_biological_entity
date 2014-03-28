@@ -76,17 +76,20 @@ function solution_pack_biological_entity_preprocess_solution_pack_biological_ent
  * the array whihc makes the seond argument to the theme function.
  */
 function islandora_solution_pack_biological_entity_islandora_sp_biological_entity_rank_cmodel_islandora_view_object($object, $page_number, $page_size) {
-  $output = theme('solution_pack_biological_entity', array('islandora_object' => $object));
+//  $output = theme('solution_pack_biological_entity', array('islandora_object' => $object));
+  $output='RANK object';
   return array('' => $output);
 }
 
 function islandora_solution_pack_biological_entity_islandora_sp_biological_entity_taxa_cmodel_islandora_view_object($object, $page_number, $page_size) {
-  $output = theme('solution_pack_biological_entity', array('islandora_object' => $object));
+//  $output = theme('solution_pack_biological_entity', array('islandora_object' => $object));
+  $output='TAXA object';
   return array('' => $output);
 }
 
 function islandora_solution_pack_biological_entity_islandora_sp_biological_entity_isolate_cmodel_islandora_view_object($object, $page_number, $page_size) {
-  $output = theme('solution_pack_biological_entity', array('islandora_object' => $object));
+//  $output = theme('solution_pack_biological_entity', array('islandora_object' => $object));
+  $output='ISOLATE object';
   return array('' => $output);
 }
 
@@ -156,20 +159,28 @@ function solution_pack_biological_entity_islandora_content_model_forms_form_asso
  * Implements hook_islandora_required_objects().
  * This hook ingests a very basic content model.  It is run when the module is
  * first installed.
-
-function solution_pack_biological_entity_islandora_required_objects(IslandoraTuque $connection) {
-  $solution_pack_biological_entity_content_model = $connection->repository->constructObject('islandora:porcusCModel');
+ */
+function islandora_solution_pack_biological_entity_islandora_required_objects(IslandoraTuque $connection) {
+  $module_path = drupal_get_path('module', 'islandora_solution_pack_biological_entity');
+		
+	
+  $solution_pack_biological_entity_content_model = $connection->repository->constructObject('islandora:sp_biological_entity_rank_cmodel');
   $solution_pack_biological_entity_content_model->owner = 'fedoraAdmin';
-  $solution_pack_biological_entity_content_model->label = 'Islandora Pig Latin Model';
+  $solution_pack_biological_entity_content_model->label = 'Islandora Biological Entity Rank Content Model';
   $solution_pack_biological_entity_content_model->models = 'fedora-system:ContentModel-3.0';
+  
+  $datastream = $solution_pack_biological_entity_content_model->constructDatastream('DS-COMPOSITE-MODEL', 'X');
+  $datastream->label = 'DS-COMPOSITE-MODEL';
+  $datastream->mimetype = 'text/xml';
+  $datastream->setContentFromFile("$module_path/xml/islandora_biological_entity_rank_ds_composite_model.xml", FALSE);
+  $solution_pack_biological_entity_content_model->ingestDatastream($datastream);
 
   return array(
     'solution_pack_biological_entity' => array(
-      'title' => 'Islandora Pig Latin',
+      'title' => 'Islandora Biological Entity',
       'objects' => array(
         $solution_pack_biological_entity_content_model,
       ),
     ),
   );
 }
- */
