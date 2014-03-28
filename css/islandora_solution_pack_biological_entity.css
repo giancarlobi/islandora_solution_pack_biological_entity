@@ -1,0 +1,13 @@
+
+root {
+  display: block;
+}
+
+.solution_pack_biological_entity_thumb {
+  float: left;
+  padding: 4%;
+}
+.islandora-solution_pack_biological_entity-content {
+  color: maroon;
+  font-size: 120%;
+}

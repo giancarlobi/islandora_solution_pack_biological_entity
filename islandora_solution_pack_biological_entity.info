@@ -1,0 +1,5 @@
+name = Islandora Biological Entity 
+description = SP for Biological Entity.
+package = Islandora
+version = "7.x-1.x-dev"
+core = "7.x"

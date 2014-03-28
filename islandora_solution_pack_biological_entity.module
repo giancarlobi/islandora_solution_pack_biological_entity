@@ -1,0 +1,175 @@
+<?php
+
+/**
+ * @file
+ * Pig latin demo module.
+ *
+ */
+
+
+/**
+ * Implements hook_menu().
+ * Drupal menus allow urls to be used as function calls, giving Drupal gets much
+ * of its power and flexibillty.
+ * See https://api.drupal.org/api/drupal/modules!system!system.api.php/function/hook_menu/7
+ */
+function solution_pack_biological_entity_menu() {
+  return array(
+    'admin/islandora/biological_entity' => array(
+      'title' => 'Biological Entity Module',
+      'description' => 'Configure the Biological Entity solution pack.',
+      'page callback' => 'drupal_get_form',
+      'access arguments' => array('administer site configuration'),
+      'page arguments' => array('solution_pack_biological_entity_admin'),
+      'file' => 'includes/solution_pack_biological_entity.admin.inc',
+      'type' => MENU_NORMAL_ITEM,
+    ),
+  );
+}
+/**
+ * Implements hook_theme().
+ *
+ * We supply a pattern so we can overide templates at the theme level if needed.
+ * we can append a pid to a template and the new template file will be called
+ * (the pids colon should be replaced with a dash)
+ */
+function solution_pack_biological_entity_theme($existing, $type, $theme, $path) {
+  return array(
+    'solution_pack_biological_entity' => array(
+      'template' => 'theme/islandora-solution_pack_biological_entity',
+      'pattern' => 'solution_pack_biological_entity__',
+      'variables' => array('islandora_object' => NULL),
+    ),
+  );
+}
+
+/**
+ * Implements hook_preprocess_theme().
+ * This is a Drupal hook, not supplied by islandora.
+ * Variables required for display are assembled here and passed to the template file
+ * defined in the theme function.  The function defines islandora-porcus, which
+ * expands to islandora-porcus.tpl.php.
+ * The isandora object has been added to the $variables array by 
+ * hook_CMODEL_PID_islandora_view_object(), whihc in this case is
+ * solution_pack_biological_entity_solution_pack_biological_entityCModel_islandora_view_object
+ * 
+ */
+function solution_pack_biological_entity_preprocess_solution_pack_biological_entity(array &$variables) {
+
+  $islandora_object = $variables['islandora_object'];
+  // Thumbnail.
+  if (isset($islandora_object['TN'])) {
+    $thumbnail_size_url = url("islandora/object/{$islandora_object->id}/datastream/TN/view");
+    $params = array(
+      'title' => $islandora_object->label,
+      'path' => $thumbnail_size_url,
+    );
+    $variables['islandora_thumbnail_img'] = theme('image', $params);
+  }
+}
+
+/**
+ * Implements hook_CMODEL_PID_islandora_view_object().
+ * If an object's behavior is defined by the solution_pack_biological_entity_solution_pack_biological_entityCModel content model
+ * this hook takes the object being displayed and sends it to the theme function described by solution_pack_biological_entity_theme.
+ * A reference to the islandora object being displayed is added here as a member of
+ * the array whihc makes the seond argument to the theme function.
+ */
+function islandora_solution_pack_biological_entity_islandora_sp_biological_entity_rank_cmodel_islandora_view_object($object, $page_number, $page_size) {
+  $output = theme('solution_pack_biological_entity', array('islandora_object' => $object));
+  return array('' => $output);
+}
+
+function islandora_solution_pack_biological_entity_islandora_sp_biological_entity_taxa_cmodel_islandora_view_object($object, $page_number, $page_size) {
+  $output = theme('solution_pack_biological_entity', array('islandora_object' => $object));
+  return array('' => $output);
+}
+
+function islandora_solution_pack_biological_entity_islandora_sp_biological_entity_isolate_cmodel_islandora_view_object($object, $page_number, $page_size) {
+  $output = theme('solution_pack_biological_entity', array('islandora_object' => $object));
+  return array('' => $output);
+}
+
+
+/**
+ * Implements hook_islandora_ingest_steps().
+ * This hook adds a single ingest step, but more could be added as seperate entries.
+
+function solution_pack_biological_entity_solution_pack_biological_entityCModel_islandora_ingest_steps(array $configuration) {
+  return array(
+    'solution_pack_biological_entity_file_upload' => array(
+      'weight' => 10,
+      'type' => 'form',
+      'form_id' => 'solution_pack_biological_entity_upload_form',
+      'module' => 'solution_pack_biological_entity',
+      'file' => 'includes/solution_pack_biological_entity_upload.form.inc'
+    )
+  );
+}
+ */
+/**
+ * Implements hook_CMODEL_PID_islandora_object_ingested().
+ * This hook tells Islandora what to do with the object once it has been ingested.
+ * In this case the raw text has been uploaded so we'll be in a position to 
+ * use that as input for our derived datastreams. The function
+ * solution_pack_biological_entity_create_all_derivatives will be called with a refrence to the 
+ * as yet uningested object. 
+
+function solution_pack_biological_entity_solution_pack_biological_entityCModel_islandora_object_ingested($object) {
+  module_load_include('inc', 'solution_pack_biological_entity', 'includes/derivatives');
+  solution_pack_biological_entity_create_all_derivatives($object);
+}
+ */
+/**
+ * Implements hook_islandora_xml_form_builder_forms().
+ * This hook makes a predefined ingest form for ingest.
+
+function solution_pack_biological_entity_islandora_xml_form_builder_forms() {
+  $module_path = drupal_get_path('module', 'solution_pack_biological_entity');
+  return array(
+    'Porcus MODS form' => array(
+      'form_file' => "$module_path/xml/solution_pack_biological_entity_form_mods.xml",
+    ),
+  );
+}
+ */
+/**
+ * Implements hook_islandora_content_model_forms_form_associations().
+ * This hook associated our form with our content model.  Any time we try to ingest
+ * an object with the islandora:porcusCModel content model, we will see this form
+ * allowing us to supply relevant metadata.
+
+function solution_pack_biological_entity_islandora_content_model_forms_form_associations() {
+  return array(
+    'solution_pack_biological_entity_mods_form' => array(
+      'content_model' => 'islandora:porcusCModel',
+      'form_name' => 'Porcus MODS form',
+      'dsid' => 'MODS',
+      'title_field' => array('titleInfo', 'title'),
+      'transform' => 'mods_to_dc.xsl',
+      'template' => FALSE,
+    ),
+  );
+}
+ */
+/**
+ * Implements hook_islandora_required_objects().
+ * This hook ingests a very basic content model.  It is run when the module is
+ * first installed.
+
+function solution_pack_biological_entity_islandora_required_objects(IslandoraTuque $connection) {
+  $solution_pack_biological_entity_content_model = $connection->repository->constructObject('islandora:porcusCModel');
+  $solution_pack_biological_entity_content_model->owner = 'fedoraAdmin';
+  $solution_pack_biological_entity_content_model->label = 'Islandora Pig Latin Model';
+  $solution_pack_biological_entity_content_model->models = 'fedora-system:ContentModel-3.0';
+
+  return array(
+    'solution_pack_biological_entity' => array(
+      'title' => 'Islandora Pig Latin',
+      'objects' => array(
+        $solution_pack_biological_entity_content_model,
+      ),
+    ),
+  );
+}
+ */
