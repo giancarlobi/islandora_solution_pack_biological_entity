@@ -57,16 +57,22 @@ function islandora_solution_pack_biological_entity_theme($existing, $type, $them
  * 
  */
 function islandora_solution_pack_biological_entity_preprocess_be_rank(array &$variables) {
+
+  module_load_include('inc', 'islandora', 'includes/datastream');
+  module_load_include('inc', 'islandora', 'includes/utilities');
+  module_load_include('inc', 'islandora', 'includes/metadata');
+
   $islandora_object = $variables['islandora_object'];
-  // Thumbnail.
-  if (isset($islandora_object['TN'])) {
-    $thumbnail_size_url = url("islandora/object/{$islandora_object->id}/datastream/TN/view");
-    $params = array(
-      'title' => $islandora_object->label,
-      'path' => $thumbnail_size_url,
-    );
-    $variables['islandora_thumbnail_img'] = theme('image', $params);
+  $results = $islandora_object->relationships->get('http://aims.fao.org/aos/v1.0/', 'isTaxonomicLevelOf');
+  $related_taxa = array();
+  foreach ($results as $child){
+        $PIDhastaxalev = $child['object']['value'];
+        $hastaxalev = islandora_object_load($PIDhastaxalev);
+        $dc = $hastaxalev['DC']->content;
+        $dc_object = DublinCore::importFromXMLString($dc);
+        $related_taxa[$child['object']['value']]['title'] = $dc_object->dc['dc:title'][0];
   }
+  $variables['related_taxa'] = $related_taxa;
 }
 
 /**
