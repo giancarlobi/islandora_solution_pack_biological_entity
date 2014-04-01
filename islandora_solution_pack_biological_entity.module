@@ -42,6 +42,11 @@ function islandora_solution_pack_biological_entity_theme($existing, $type, $them
       'pattern' => 'be_rank__',
       'variables' => array('islandora_object' => NULL),
     ),
+    'be_taxa' => array(
+      'template' => 'theme/islandora-taxa',
+      'pattern' => 'be_taxa__',
+      'variables' => array('islandora_object' => NULL),
+    ),
   );
 }
 
@@ -75,6 +80,50 @@ function islandora_solution_pack_biological_entity_preprocess_be_rank(array &$va
   $variables['related_taxa'] = $related_taxa;
 }
 
+function islandora_solution_pack_biological_entity_preprocess_be_taxa(array &$variables) {
+
+  module_load_include('inc', 'islandora', 'includes/datastream');
+  module_load_include('inc', 'islandora', 'includes/utilities');
+  module_load_include('inc', 'islandora', 'includes/metadata');
+
+  $islandora_object = $variables['islandora_object'];
+
+  $results = $islandora_object->relationships->get('http://aims.fao.org/aos/v1.0/', 'hasTaxonomicLevel');
+  $related_rank = array();
+  foreach ($results as $child){
+        $PID = $child['object']['value'];
+        $fobject = islandora_object_load($PID);
+        $dc = $fobject['DC']->content;
+        $dc_object = DublinCore::importFromXMLString($dc);
+        $related_rank[$child['object']['value']]['title'] = $dc_object->dc['dc:title'][0];
+  }
+  $variables['related_rank'] = $related_rank;
+
+  $results = $islandora_object->relationships->get('http://aims.fao.org/aos/v1.0/', 'hasBroaderSynonym');
+  $related_broader = array();
+  foreach ($results as $child){
+        $PID = $child['object']['value'];
+        $fobject = islandora_object_load($PID);
+        $dc = $fobject['DC']->content;
+        $dc_object = DublinCore::importFromXMLString($dc);
+        $related_broader[$child['object']['value']]['title'] = $dc_object->dc['dc:title'][0];
+  }
+  $variables['related_broader'] = $related_broader;
+
+  $results = $islandora_object->relationships->get('http://aims.fao.org/aos/v1.0/', 'hasNarrowerSynonym');
+  $related_narrower = array();
+  foreach ($results as $child){
+        $PID = $child['object']['value'];
+        $fobject = islandora_object_load($PID);
+        $dc = $fobject['DC']->content;
+        $dc_object = DublinCore::importFromXMLString($dc);
+        $related_narrower[$child['object']['value']]['title'] = $dc_object->dc['dc:title'][0];
+  }
+  $variables['related_narrower'] = $related_narrower;
+}
+
+
+
 /**
  * Implements hook_CMODEL_PID_islandora_view_object().
  * If an object's behavior is defined by the solution_pack_biological_entity_solution_pack_biological_entityCModel content model
@@ -90,7 +139,7 @@ function islandora_solution_pack_biological_entity_islandora_sp_biological_entit
 }
 
 function islandora_solution_pack_biological_entity_islandora_sp_biological_entity_taxa_cmodel_islandora_view_object($object, $page_number, $page_size) {
-//  $output = theme('solution_pack_biological_entity', array('islandora_object' => $object));
+//  $output = theme('be_taxa', array('islandora_object' => $object));
   $output='TAXA object';
   return array('' => $output);
 }
