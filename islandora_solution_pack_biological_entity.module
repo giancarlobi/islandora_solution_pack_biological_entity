@@ -120,6 +120,8 @@ function islandora_solution_pack_biological_entity_preprocess_be_taxa(array &$va
         $related_narrower[$child['object']['value']]['title'] = $dc_object->dc['dc:title'][0];
   }
   $variables['related_narrower'] = $related_narrower;
+
+
 }
 
 
@@ -139,8 +141,8 @@ function islandora_solution_pack_biological_entity_islandora_sp_biological_entit
 }
 
 function islandora_solution_pack_biological_entity_islandora_sp_biological_entity_taxa_cmodel_islandora_view_object($object, $page_number, $page_size) {
-//  $output = theme('be_taxa', array('islandora_object' => $object));
-  $output='TAXA object';
+  $output = theme('be_taxa', array('islandora_object' => $object));
+//  $output='TAXA object';
   return array('' => $output);
 }
 
@@ -183,35 +185,35 @@ function solution_pack_biological_entity_solution_pack_biological_entityCModel_i
 /**
  * Implements hook_islandora_xml_form_builder_forms().
  * This hook makes a predefined ingest form for ingest.
+ */
 
-function solution_pack_biological_entity_islandora_xml_form_builder_forms() {
-  $module_path = drupal_get_path('module', 'solution_pack_biological_entity');
+function islandora_solution_pack_biological_entity_islandora_xml_form_builder_forms() {
+  $module_path = drupal_get_path('module', 'islandora_solution_pack_biological_entity');
   return array(
-    'Porcus MODS form' => array(
-      'form_file' => "$module_path/xml/solution_pack_biological_entity_form_mods.xml",
+    'BE DwC' => array(
+      'form_file' => "$module_path/xml/biological_entity_form_dwc.xml",
     ),
   );
 }
- */
 /**
  * Implements hook_islandora_content_model_forms_form_associations().
  * This hook associated our form with our content model.  Any time we try to ingest
  * an object with the islandora:porcusCModel content model, we will see this form
  * allowing us to supply relevant metadata.
+ */
 
-function solution_pack_biological_entity_islandora_content_model_forms_form_associations() {
+function islandora_solution_pack_biological_entity_islandora_content_model_forms_form_associations() {
   return array(
-    'solution_pack_biological_entity_mods_form' => array(
-      'content_model' => 'islandora:porcusCModel',
-      'form_name' => 'Porcus MODS form',
-      'dsid' => 'MODS',
-      'title_field' => array('titleInfo', 'title'),
-      'transform' => 'mods_to_dc.xsl',
+    'islandora_solution_pack_biological_entity_dwc_form' => array(
+      'content_model' => 'islandora:sp_biological_entity_rank_cmodel',
+      'form_name' => 'BE DwC',
+      'dsid' => 'DWC',
+      'title_field' => array('SimpleDarwinRecord', 'dwc_fields_taxon', 'scientificName'),
+      'transform' => 'dwc_to_dc.xsl',
       'template' => FALSE,
     ),
   );
 }
- */
 /**
  * Implements hook_islandora_required_objects().
  * This hook ingests a very basic content model.  It is run when the module is
