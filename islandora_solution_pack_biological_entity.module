@@ -193,6 +193,9 @@ function islandora_solution_pack_biological_entity_islandora_xml_form_builder_fo
     'BE Rank DwC' => array(
       'form_file' => "$module_path/xml/biological_entity_rank_form_dwc.xml",
     ),
+    'BE Taxa DwC' => array(
+      'form_file' => "$module_path/xml/biological_entity_taxa_form_dwc.xml",
+    ),
   );
 }
 /**
@@ -212,6 +215,14 @@ function islandora_solution_pack_biological_entity_islandora_content_model_forms
       'transform' => 'dwc_to_dc.xsl',
       'template' => FALSE,
     ),
+    'islandora_solution_pack_biological_entity_taxa_dwc_form' => array(
+      'content_model' => 'islandora:sp_biological_entity_taxa_cmodel',
+      'form_name' => 'BE Taxa DwC',
+      'dsid' => 'DWC',
+      'title_field' => array('SimpleDarwinRecord', 'dwc_fields_taxon', 'scientificName'),
+      'transform' => 'dwc_to_dc.xsl',
+      'template' => FALSE,
+    ),
   );
 }
 /**
@@ -223,22 +234,47 @@ function islandora_solution_pack_biological_entity_islandora_required_objects(Is
   $module_path = drupal_get_path('module', 'islandora_solution_pack_biological_entity');
 		
 	
-  $solution_pack_biological_entity_content_model = $connection->repository->constructObject('islandora:sp_biological_entity_rank_cmodel');
-  $solution_pack_biological_entity_content_model->owner = 'fedoraAdmin';
-  $solution_pack_biological_entity_content_model->label = 'Islandora Biological Entity Rank Content Model';
-  $solution_pack_biological_entity_content_model->models = 'fedora-system:ContentModel-3.0';
+  $solution_pack_biological_entity_rank_content_model = $connection->repository->constructObject('islandora:sp_biological_entity_rank_cmodel');
+  $solution_pack_biological_entity_rank_content_model->owner = 'fedoraAdmin';
+  $solution_pack_biological_entity_rank_content_model->label = 'Islandora Biological Entity Rank Content Model';
+  $solution_pack_biological_entity_rank_content_model->models = 'fedora-system:ContentModel-3.0';
   
-  $datastream = $solution_pack_biological_entity_content_model->constructDatastream('DS-COMPOSITE-MODEL', 'X');
+  $datastream = $solution_pack_biological_entity_rank_content_model->constructDatastream('DS-COMPOSITE-MODEL', 'X');
   $datastream->label = 'DS-COMPOSITE-MODEL';
   $datastream->mimetype = 'text/xml';
   $datastream->setContentFromFile("$module_path/xml/islandora_biological_entity_rank_ds_composite_model.xml", FALSE);
-  $solution_pack_biological_entity_content_model->ingestDatastream($datastream);
+  $solution_pack_biological_entity_rank_content_model->ingestDatastream($datastream);
 
+  $solution_pack_biological_entity_taxa_content_model = $connection->repository->constructObject('islandora:sp_biological_entity_taxa_cmodel');
+  $solution_pack_biological_entity_taxa_content_model->owner = 'fedoraAdmin';
+  $solution_pack_biological_entity_taxa_content_model->label = 'Islandora Biological Entity Taxa Content Model';
+  $solution_pack_biological_entity_taxa_content_model->models = 'fedora-system:ContentModel-3.0';
+  
+  $datastream = $solution_pack_biological_entity_taxa_content_model->constructDatastream('DS-COMPOSITE-MODEL', 'X');
+  $datastream->label = 'DS-COMPOSITE-MODEL';
+  $datastream->mimetype = 'text/xml';
+  $datastream->setContentFromFile("$module_path/xml/islandora_biological_entity_taxa_ds_composite_model.xml", FALSE);
+  $solution_pack_biological_entity_taxa_content_model->ingestDatastream($datastream);
+  
+  $solution_pack_biological_entity_isolate_content_model = $connection->repository->constructObject('islandora:sp_biological_entity_isolate_cmodel');
+  $solution_pack_biological_entity_isolate_content_model->owner = 'fedoraAdmin';
+  $solution_pack_biological_entity_isolate_content_model->label = 'Islandora Biological Entity Isolate Content Model';
+  $solution_pack_biological_entity_isolate_content_model->models = 'fedora-system:ContentModel-3.0';
+  
+  $datastream = $solution_pack_biological_entity_isolate_content_model->constructDatastream('DS-COMPOSITE-MODEL', 'X');
+  $datastream->label = 'DS-COMPOSITE-MODEL';
+  $datastream->mimetype = 'text/xml';
+  $datastream->setContentFromFile("$module_path/xml/islandora_biological_entity_isolate_ds_composite_model.xml", FALSE);
+  $solution_pack_biological_entity_isolate_content_model->ingestDatastream($datastream);
+  
+    
   return array(
     'solution_pack_biological_entity' => array(
       'title' => 'Islandora Biological Entity',
       'objects' => array(
-        $solution_pack_biological_entity_content_model,
+        $solution_pack_biological_entity_rank_content_model,
+        $solution_pack_biological_entity_taxa_content_model,
+        $solution_pack_biological_entity_isolate_content_model,
       ),
     ),
   );

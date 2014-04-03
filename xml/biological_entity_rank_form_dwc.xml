@@ -57,7 +57,7 @@
                   <access>TRUE</access>
                   <description>The full scientific name, with authorship and date information if known. When forming part of an Identification, this should be the name in lowest level taxonomic rank that can be determined. This term should not contain identification qualifications, which should instead be supplied in the IdentificationQualifier term.</description>
                   <required>FALSE</required>
-                  <title>Sceintific Name</title>
+                  <title>Scientific Name</title>
                   <tree>TRUE</tree>
                   <actions>
                     <create>
