@@ -194,7 +194,7 @@ function islandora_solution_pack_biological_entity_islandora_xml_form_builder_fo
       'form_file' => "$module_path/xml/biological_entity_rank_form_dwc.xml",
     ),
     'BE Taxa DwC' => array(
-      'form_file' => "$module_path/xml/biological_entity_taxa_form_dwc.xml",
+      'form_file' => "$module_path/xml//biological_entity_taxa_form_dwc.xml",
     ),
   );
 }
@@ -269,7 +269,7 @@ function islandora_solution_pack_biological_entity_islandora_required_objects(Is
   
     
   return array(
-    'solution_pack_biological_entity' => array(
+    'islandora_solution_pack_biological_entity' => array(
       'title' => 'Islandora Biological Entity',
       'objects' => array(
         $solution_pack_biological_entity_rank_content_model,

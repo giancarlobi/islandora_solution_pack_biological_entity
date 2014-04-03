@@ -3,7 +3,7 @@
 /**
  * @file
  *
- * Installs the required object for pig latin solution pack.
+ * Installs the required object for solution pack.
  */
 
 /**
@@ -11,14 +11,14 @@
  *
  * @see islandora_islandora_required_objects()
  */
-function solution_pack_biological_entity_install() {
+function islandora_solution_pack_biological_entity_install() {
   module_load_include('inc', 'islandora', 'includes/solution_packs');
-  islandora_install_solution_pack('solution_pack_biological_entity');
+  islandora_install_solution_pack('islandora_solution_pack_biological_entity');
 }
 
 /**
  * Implementation of hook_uninstall.
  */
-function solution_pack_biological_entity_uninstall() {
+function islandora_solution_pack_biological_entity_uninstall() {
 
 }
