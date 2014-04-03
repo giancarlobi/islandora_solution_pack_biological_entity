@@ -190,8 +190,8 @@ function solution_pack_biological_entity_solution_pack_biological_entityCModel_i
 function islandora_solution_pack_biological_entity_islandora_xml_form_builder_forms() {
   $module_path = drupal_get_path('module', 'islandora_solution_pack_biological_entity');
   return array(
-    'BE DwC' => array(
-      'form_file' => "$module_path/xml/biological_entity_form_dwc.xml",
+    'BE Rank DwC' => array(
+      'form_file' => "$module_path/xml/biological_entity_rank_form_dwc.xml",
     ),
   );
 }
@@ -204,9 +204,9 @@ function islandora_solution_pack_biological_entity_islandora_xml_form_builder_fo
 
 function islandora_solution_pack_biological_entity_islandora_content_model_forms_form_associations() {
   return array(
-    'islandora_solution_pack_biological_entity_dwc_form' => array(
+    'islandora_solution_pack_biological_entity_rank_dwc_form' => array(
       'content_model' => 'islandora:sp_biological_entity_rank_cmodel',
-      'form_name' => 'BE DwC',
+      'form_name' => 'BE Rank DwC',
       'dsid' => 'DWC',
       'title_field' => array('SimpleDarwinRecord', 'dwc_fields_taxon', 'scientificName'),
       'transform' => 'dwc_to_dc.xsl',

@@ -5,4 +5,7 @@
     <dsTypeModel ID="RELS-EXT" optional="true">
         <form FORMAT_URI="info:fedora/fedora-system:FedoraRELSExt-1.0" MIME="application/rdf+xml"></form>
     </dsTypeModel>
+    <dsTypeModel ID="DWC" >
+        <form FORMAT_URI="http://rs.tdwg.org/dwc/xsd/simpledarwincore/" MIME="text/xml"></form>
+    </dsTypeModel>  
 </dsCompositeModel>

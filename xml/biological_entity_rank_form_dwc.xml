@@ -1,0 +1,105 @@
+<?xml version="1.0"?>
+<definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2">
+  <properties>
+    <root_name>SimpleDarwinRecordSet</root_name>
+    <schema_uri/>
+    <namespaces default="http://rs.tdwg.org/dwc/xsd/simpledarwincore/">
+      <namespace prefix="dwr">http://rs.tdwg.org/dwc/xsd/simpledarwincore/</namespace>
+      <namespace prefix="xsi">http://www.w3.org/2001/XMLSchema-instance</namespace>
+      <namespace prefix="dwc">http://rs.tdwg.org/dwc/terms/</namespace>
+      <namespace prefix="dc">http://purl.org/dc/terms/</namespace>
+    </namespaces>
+  </properties>
+  <form>
+    <properties>
+      <type>form</type>
+      <access>TRUE</access>
+      <required>FALSE</required>
+      <tree>TRUE</tree>
+    </properties>
+    <children>
+      <element name="SimpleDarwinRecord">
+        <properties>
+          <type>markup</type>
+          <access>TRUE</access>
+          <required>FALSE</required>
+          <tree>TRUE</tree>
+          <actions>
+            <create>
+              <path>/dwr:SimpleDarwinRecordSet</path>
+              <context>document</context>
+              <schema/>
+              <type>element</type>
+              <prefix>NULL</prefix>
+              <value>SimpleDarwinRecord</value>
+            </create>
+            <read>
+              <path>/dwr:SimpleDarwinRecordSet/dwr:SimpleDarwinRecord</path>
+              <context>document</context>
+            </read>
+            <update>NULL</update>
+            <delete>NULL</delete>
+          </actions>
+        </properties>
+        <children>
+          <element name="dwc_fields_taxon">
+            <properties>
+              <type>fieldset</type>
+              <access>TRUE</access>
+              <required>FALSE</required>
+              <title>Taxon terms</title>
+              <tree>TRUE</tree>
+            </properties>
+            <children>
+              <element name="scientificName">
+                <properties>
+                  <type>textfield</type>
+                  <access>TRUE</access>
+                  <description>The full scientific name, with authorship and date information if known. When forming part of an Identification, this should be the name in lowest level taxonomic rank that can be determined. This term should not contain identification qualifications, which should instead be supplied in the IdentificationQualifier term.</description>
+                  <required>FALSE</required>
+                  <title>Sceintific Name</title>
+                  <tree>TRUE</tree>
+                  <actions>
+                    <create>
+                      <path>/dwr:SimpleDarwinRecordSet/dwr:SimpleDarwinRecord</path>
+                      <context>document</context>
+                      <schema/>
+                      <type>element</type>
+                      <prefix>dwc</prefix>
+                      <value>dwc:scientificName</value>
+                    </create>
+                    <read>
+                      <path>/dwr:SimpleDarwinRecordSet/dwr:SimpleDarwinRecord/dwc:scientificName</path>
+                      <context>document</context>
+                    </read>
+                    <update>
+                      <path>self::node()</path>
+                      <context>self</context>
+                    </update>
+                    <delete>
+                      <path>self::node()</path>
+                      <context>self</context>
+                    </delete>
+                  </actions>
+                </properties>
+                <children/>
+              </element>
+            </children>
+          </element>
+          
+          <element name="Submit">
+            <properties>
+              <type>submit</type>
+              <access>TRUE</access>
+              <default_value>Submit</default_value>
+              <required>FALSE</required>
+              <title>Submit</title>
+              <tree>TRUE</tree>
+            </properties>
+            <children/>
+          </element>
+        </children>
+      </element>
+    </children>
+  </form>
+</definition>
