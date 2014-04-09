@@ -267,7 +267,61 @@ function islandora_solution_pack_biological_entity_islandora_required_objects(Is
   $datastream->setContentFromFile("$module_path/xml/islandora_biological_entity_isolate_ds_composite_model.xml", FALSE);
   $solution_pack_biological_entity_isolate_content_model->ingestDatastream($datastream);
   
-    
+  $rank_collection = $connection->repository->constructObject('islandora:rank_collection');
+  $rank_collection->owner = 'fedoraAdmin';
+  $rank_collection->label = 'Taxonomic levels';
+  $rank_collection->models = 'islandora:collectionCModel';
+  $rank_collection->relationships->add(FEDORA_RELS_EXT_URI, 'isMemberOfCollection', 'islandora:root');
+
+  $datastream = $rank_collection->constructDatastream('COLLECTION_POLICY', 'X');
+  $datastream->label = 'Collection policy';
+  $datastream->mimetype = 'text/xml';
+  $datastream->setContentFromFile("$module_path/xml/islandora_biological_entity_rank_collection_policy.xml", FALSE);
+  $rank_collection->ingestDatastream($datastream);
+
+  $datastream = $rank_collection->constructDatastream('TN', 'M');
+  $datastream->label = 'Thumbnail';
+  $datastream->mimetype = 'image/png';
+  $datastream->setContentFromFile("$module_path/images/folder.png", FALSE);
+  $rank_collection->ingestDatastream($datastream);
+
+  $taxa_collection = $connection->repository->constructObject('islandora:taxa_collection');
+  $taxa_collection->owner = 'fedoraAdmin';
+  $taxa_collection->label = 'Taxonomy';
+  $taxa_collection->models = 'islandora:collectionCModel';
+  $taxa_collection->relationships->add(FEDORA_RELS_EXT_URI, 'isMemberOfCollection', 'islandora:root');
+
+  $datastream = $taxa_collection->constructDatastream('COLLECTION_POLICY', 'X');
+  $datastream->label = 'Collection policy';
+  $datastream->mimetype = 'text/xml';
+  $datastream->setContentFromFile("$module_path/xml/islandora_biological_entity_taxa_collection_policy.xml", FALSE);
+  $taxa_collection->ingestDatastream($datastream);
+
+  $datastream = $taxa_collection->constructDatastream('TN', 'M');
+  $datastream->label = 'Thumbnail';
+  $datastream->mimetype = 'image/png';
+  $datastream->setContentFromFile("$module_path/images/folder.png", FALSE);
+  $taxa_collection->ingestDatastream($datastream);
+
+  $isolate_collection = $connection->repository->constructObject('islandora:isolate_collection');
+  $isolate_collection->owner = 'fedoraAdmin';
+  $isolate_collection->label = 'Isolates';
+  $isolate_collection->models = 'islandora:collectionCModel';
+  $isolate_collection->relationships->add(FEDORA_RELS_EXT_URI, 'isMemberOfCollection', 'islandora:root');
+
+  $datastream = $isolate_collection->constructDatastream('COLLECTION_POLICY', 'X');
+  $datastream->label = 'Collection policy';
+  $datastream->mimetype = 'text/xml';
+  $datastream->setContentFromFile("$module_path/xml/islandora_biological_entity_isolate_collection_policy.xml", FALSE);
+  $isolate_collection->ingestDatastream($datastream);
+
+  $datastream = $isolate_collection->constructDatastream('TN', 'M');
+  $datastream->label = 'Thumbnail';
+  $datastream->mimetype = 'image/png';
+  $datastream->setContentFromFile("$module_path/images/folder.png", FALSE);
+  $isolate_collection->ingestDatastream($datastream);
+
+
   return array(
     'islandora_solution_pack_biological_entity' => array(
       'title' => 'Islandora Biological Entity',
@@ -275,6 +329,9 @@ function islandora_solution_pack_biological_entity_islandora_required_objects(Is
         $solution_pack_biological_entity_rank_content_model,
         $solution_pack_biological_entity_taxa_content_model,
         $solution_pack_biological_entity_isolate_content_model,
+        $rank_collection,
+        $taxa_collection,
+        $isolate_collection,
       ),
     ),
   );
