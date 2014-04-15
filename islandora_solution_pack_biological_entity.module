@@ -233,7 +233,7 @@ function islandora_solution_pack_biological_entity_islandora_content_model_forms
 function islandora_solution_pack_biological_entity_islandora_required_objects(IslandoraTuque $connection) {
   $module_path = drupal_get_path('module', 'islandora_solution_pack_biological_entity');
 		
-	
+/** RANK CModel */	
   $solution_pack_biological_entity_rank_content_model = $connection->repository->constructObject('islandora:sp_biological_entity_rank_cmodel');
   $solution_pack_biological_entity_rank_content_model->owner = 'fedoraAdmin';
   $solution_pack_biological_entity_rank_content_model->label = 'Islandora Biological Entity Rank Content Model';
@@ -245,6 +245,7 @@ function islandora_solution_pack_biological_entity_islandora_required_objects(Is
   $datastream->setContentFromFile("$module_path/xml/islandora_biological_entity_rank_ds_composite_model.xml", FALSE);
   $solution_pack_biological_entity_rank_content_model->ingestDatastream($datastream);
 
+/** TAXA CModel */
   $solution_pack_biological_entity_taxa_content_model = $connection->repository->constructObject('islandora:sp_biological_entity_taxa_cmodel');
   $solution_pack_biological_entity_taxa_content_model->owner = 'fedoraAdmin';
   $solution_pack_biological_entity_taxa_content_model->label = 'Islandora Biological Entity Taxa Content Model';
@@ -255,7 +256,20 @@ function islandora_solution_pack_biological_entity_islandora_required_objects(Is
   $datastream->mimetype = 'text/xml';
   $datastream->setContentFromFile("$module_path/xml/islandora_biological_entity_taxa_ds_composite_model.xml", FALSE);
   $solution_pack_biological_entity_taxa_content_model->ingestDatastream($datastream);
+
+/** SAMPLE CModel */    
+  $solution_pack_biological_entity_sample_content_model = $connection->repository->constructObject('islandora:sp_biological_entity_sample_cmodel');
+  $solution_pack_biological_entity_sample_content_model->owner = 'fedoraAdmin';
+  $solution_pack_biological_entity_sample_content_model->label = 'Islandora Biological Entity Sample Content Model';
+  $solution_pack_biological_entity_sample_content_model->models = 'fedora-system:ContentModel-3.0';
   
+  $datastream = $solution_pack_biological_entity_sample_content_model->constructDatastream('DS-COMPOSITE-MODEL', 'X');
+  $datastream->label = 'DS-COMPOSITE-MODEL';
+  $datastream->mimetype = 'text/xml';
+  $datastream->setContentFromFile("$module_path/xml/islandora_biological_entity_sample_ds_composite_model.xml", FALSE);
+  $solution_pack_biological_entity_sample_content_model->ingestDatastream($datastream);
+
+  /** ISOLATE CModel */    
   $solution_pack_biological_entity_isolate_content_model = $connection->repository->constructObject('islandora:sp_biological_entity_isolate_cmodel');
   $solution_pack_biological_entity_isolate_content_model->owner = 'fedoraAdmin';
   $solution_pack_biological_entity_isolate_content_model->label = 'Islandora Biological Entity Isolate Content Model';
@@ -267,6 +281,7 @@ function islandora_solution_pack_biological_entity_islandora_required_objects(Is
   $datastream->setContentFromFile("$module_path/xml/islandora_biological_entity_isolate_ds_composite_model.xml", FALSE);
   $solution_pack_biological_entity_isolate_content_model->ingestDatastream($datastream);
   
+/** RANK root collection */  
   $rank_collection = $connection->repository->constructObject('islandora:rank_collection');
   $rank_collection->owner = 'fedoraAdmin';
   $rank_collection->label = 'Taxonomic levels';
@@ -285,6 +300,7 @@ function islandora_solution_pack_biological_entity_islandora_required_objects(Is
   $datastream->setContentFromFile("$module_path/images/folder.png", FALSE);
   $rank_collection->ingestDatastream($datastream);
 
+/** TAXA root collection */
   $taxa_collection = $connection->repository->constructObject('islandora:taxa_collection');
   $taxa_collection->owner = 'fedoraAdmin';
   $taxa_collection->label = 'Taxonomy';
@@ -303,6 +319,26 @@ function islandora_solution_pack_biological_entity_islandora_required_objects(Is
   $datastream->setContentFromFile("$module_path/images/folder.png", FALSE);
   $taxa_collection->ingestDatastream($datastream);
 
+/** SAMPLE root collection */
+  $sample_collection = $connection->repository->constructObject('islandora:sample_collection');
+  $sample_collection->owner = 'fedoraAdmin';
+  $sample_collection->label = 'Samples';
+  $sample_collection->models = 'islandora:collectionCModel';
+  $sample_collection->relationships->add(FEDORA_RELS_EXT_URI, 'isMemberOfCollection', 'islandora:root');
+
+  $datastream = $sample_collection->constructDatastream('COLLECTION_POLICY', 'X');
+  $datastream->label = 'Collection policy';
+  $datastream->mimetype = 'text/xml';
+  $datastream->setContentFromFile("$module_path/xml/islandora_biological_entity_sample_collection_policy.xml", FALSE);
+  $sample_collection->ingestDatastream($datastream);
+
+  $datastream = $sample_collection->constructDatastream('TN', 'M');
+  $datastream->label = 'Thumbnail';
+  $datastream->mimetype = 'image/png';
+  $datastream->setContentFromFile("$module_path/images/folder.png", FALSE);
+  $sample_collection->ingestDatastream($datastream);
+
+/** ISOLATE root collection */
   $isolate_collection = $connection->repository->constructObject('islandora:isolate_collection');
   $isolate_collection->owner = 'fedoraAdmin';
   $isolate_collection->label = 'Isolates';
@@ -320,17 +356,18 @@ function islandora_solution_pack_biological_entity_islandora_required_objects(Is
   $datastream->mimetype = 'image/png';
   $datastream->setContentFromFile("$module_path/images/folder.png", FALSE);
   $isolate_collection->ingestDatastream($datastream);
-
-
+  
   return array(
     'islandora_solution_pack_biological_entity' => array(
       'title' => 'Islandora Biological Entity',
       'objects' => array(
         $solution_pack_biological_entity_rank_content_model,
         $solution_pack_biological_entity_taxa_content_model,
+        $solution_pack_biological_entity_sample_content_model,
         $solution_pack_biological_entity_isolate_content_model,
         $rank_collection,
         $taxa_collection,
+        $sample_collection,
         $isolate_collection,
       ),
     ),
